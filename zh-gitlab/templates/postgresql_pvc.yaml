@@ -3,22 +3,25 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: "zh-gitlab-gitlab-postgresql"
+  name: "zh-gitlab-postgresql"
 spec:
   accessModes:
     - {{ .Values.gitlab.postgresql.persistence.accessMode | quote }}
   volumeMode: Filesystem
   resources:
     requests:
-      storage: 8Gi
+      storage: {{ .Values.gitlab.postgresql.persistence.size }}
   storageClassName: {{ .Values.gitlab.postgresql.persistence.storageClass }}
-  {{- if .Values.gitlab.postgresql.persistence.volumeName }}
+
+  {{ if .Values.gitlab.postgresql.persistence.volumeName }}
   volumeName:
   {{ toYaml .Values.gitlab.postgresql.persistence.volumeName | indent 4 }}
   {{- end -}}
+
+  selector:
   {{- if .Values.gitlab.postgresql.persistence.matchLabels }}
-  matchLabels:
-{{ toYaml .Values.gitlab.postgresql.persistence.matchLabels | indent 4 }}
+    matchLabels:
+{{ toYaml .Values.gitlab.postgresql.persistence.matchLabels | indent 6 }}
   {{- end -}}
 {{- end -}}
 {{- end -}}

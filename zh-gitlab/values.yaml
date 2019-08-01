@@ -31,11 +31,9 @@ gitlab:
       image:
         repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitaly
       persistence:
+        enabled: false
         size: 20Gi
-        accessMode: ReadWriteMany
-        enabled: true
-        storageClass: "slow"
-        volumeName: "zh-gitlab-gitaly"
+        accessMode: ReadWriteOnce
 
     gitlab-shell:
       image:
@@ -54,6 +52,10 @@ gitlab:
 
   postgresql:
     install: true
+    persistence:
+      enabled: false
+      existingClaim: "zh-gitlab-postgresql"
+      size: 8Gi
 
   minio:
     image: registry.cn-shanghai.aliyuncs.com/zh-mirror/minio_minio
@@ -73,6 +75,8 @@ gitlab:
     server:
       persistentVolume:
         enabled: false
+        existingClaim: "zh-gitlab-prometheus"
+        size: 8Gi
     rbac:
       create: true
 

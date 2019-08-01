@@ -1,18 +1,27 @@
 {{- if .Values.gitlab.prometheus.install -}}
+{{- if .Values.gitlab.prometheus.server.persistentVolume.enabled -}}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: "zh-gitlab-gitlab-prometheus"
+  name: "zh-gitlab-prometheus"
 spec:
   accessModes:
-    - ReadWriteOnce
+    - {{ .Values.gitlab.postgresql.persistence.accessMode | quote }}
   volumeMode: Filesystem
   resources:
     requests:
-      storage: 8Gi
+      storage: {{ .Values.gitlab.prometheus.server.persistentVolume.size }}
   storageClassName: {{ .Values.gitlab.prometheus.server.persistentVolume.storageClass }}
-  {{- if .Values.gitlab.prometheus.server.persistentVolume.matchLabels }}
-  matchLabels:
-{{ toYaml .Values.gitlab.prometheus.server.persistentVolume.matchLabels | indent 4 }}
+
+  {{ if .Values.gitlab.postgresql.persistence.volumeName }}
+  volumeName:
+  {{ toYaml .Values.gitlab.postgresql.persistence.volumeName | indent 4 }}
   {{- end -}}
+
+  selector:
+  {{- if .Values.gitlab.prometheus.server.persistentVolume.matchLabels }}
+    matchLabels:
+{{ toYaml .Values.gitlab.prometheus.server.persistentVolume.matchLabels | indent 6 }}
+  {{- end -}}
+{{- end -}}
 {{- end -}}
