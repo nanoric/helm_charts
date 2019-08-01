@@ -6,5 +6,5 @@ testing/*
 *.pem
 *.openssh
 
-**/charts/*.tgz
 requirements.lock
+*.tgz
