@@ -1,0 +1,7 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: "nfs-ns1"
+provisioner: nfs
+reclaimPolicy: Retain
+volumeBindingMode: Immediate

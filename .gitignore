@@ -1,0 +1,10 @@
+testing/*
+.idea/*
+
+# ssh key & cert
+*.key
+*.pem
+*.openssh
+
+**/charts/*.tgz
+requirements.lock

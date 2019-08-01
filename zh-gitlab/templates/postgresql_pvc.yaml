@@ -1,0 +1,24 @@
+{{- if .Values.gitlab.postgresql.install -}}
+{{- if .Values.gitlab.postgresql.persistence.enabled -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "zh-gitlab-gitlab-postgresql"
+spec:
+  accessModes:
+    - {{ .Values.gitlab.postgresql.persistence.accessMode | quote }}
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 8Gi
+  storageClassName: {{ .Values.gitlab.postgresql.persistence.storageClass }}
+  {{- if .Values.gitlab.postgresql.persistence.volumeName }}
+  volumeName:
+  {{ toYaml .Values.gitlab.postgresql.persistence.volumeName | indent 4 }}
+  {{- end -}}
+  {{- if .Values.gitlab.postgresql.persistence.matchLabels }}
+  matchLabels:
+{{ toYaml .Values.gitlab.postgresql.persistence.matchLabels | indent 4 }}
+  {{- end -}}
+{{- end -}}
+{{- end -}}
