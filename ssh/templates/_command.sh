@@ -45,7 +45,7 @@ function current_listens()
 function kill_remote_sshd()
 {
     # kill sshd to make sure remote environment is clear
-    echo "kill -9 \`ps -elf|grep -v grep|grep 'sshd: root'|tr -s ' '|cut -d ' ' -f4\`" | \
+    echo "kill -9 \`ps -elf|grep -v grep|grep 'sshd: {{$user}}'|tr -s ' '|cut -d ' ' -f4\`" | \
         ssh -i /id "{{ $user }}@{{ $host }}" -p {{ $port }} \
             {{- range $key, $val := $ps }}
             -o "{{ $key }}={{ $val }}" \
