@@ -45,7 +45,8 @@ function current_listens()
 function kill_remote_sshd()
 {
     # kill sshd to make sure remote environment is clear
-    echo "kill -9 \`ps -elf|grep -v grep|grep 'sshd: {{$user}}'|tr -s ' '|cut -d ' ' -f4\`" | \
+#    echo "kill -9 \`ps -elf|grep -v grep|grep 'sshd: {{$user}}'|tr -s ' '|cut -d ' ' -f4\`" | \
+    cat /scripts/remote_kill_sshd.sh | \
         ssh -i /id "{{ $user }}@{{ $host }}" -p {{ $port }} \
             {{- range $key, $val := $ps }}
             -o "{{ $key }}={{ $val }}" \
@@ -86,13 +87,16 @@ function run_remote_command()
     echo remote_command > /alive
 }
 
-echo alive > /alive
+echo "remote command:"
+cat /scripts/remote_command.sh
 
+echo "script to kill sshd:"
+cat /scripts/remote_kill_sshd.sh
+
+echo alive > /alive
 # tunnel:
 {{- if or $ls $rs }}
-
 kill_remote_sshd
-sleep 5
 
 run_tunnel &
 {{- end }}

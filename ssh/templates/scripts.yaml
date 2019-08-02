@@ -9,4 +9,6 @@ data:
   "command.sh": |
 {{ include (print $.Template.BasePath "/_command.sh") . | indent 4 }}
   "remote_command.sh": {{ .Values.ssh.remote_command | quote }}
+  "remote_kill_sshd.sh": |
+{{ include (print $.Template.BasePath "/_remote_kill_sshd.sh") . | indent 4 }}
 
