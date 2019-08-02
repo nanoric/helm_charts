@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "ssh.fullname" . }}-scripts
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "ssh.labels" . | indent 4 }}
+data:
+  "command.sh": |
+{{ include (print $.Template.BasePath "/_command.sh") . | indent 4 }}
+  "remote_command.sh": {{ .Values.ssh.remote_command | quote }}
+

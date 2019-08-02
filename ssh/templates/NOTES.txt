@@ -1,0 +1,6 @@
+{{- if .Values.ssh.forwards.remote -}}
+ssh remote forward for public access:
+sed -i "s/^#GatewayPorts no$/GatewayPorts clientspecified/" /etc/ssh/sshd_config
+{{- end }}
+
+

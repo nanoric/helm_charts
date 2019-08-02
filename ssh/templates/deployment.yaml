@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ssh.fullname" . }}
+  labels:
+{{ include "ssh.labels" . | indent 4 }}
+    app: ssh
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "ssh.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "ssh.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            # use this env to ensure pod restart after reinstall.
+            - name: config
+              value: {{ toJson .Values.ssh | quote }}
+#          command: ["bash", "/scripts/command.sh"]
+          command: ["bash", "-c", "cp /scripts/command.sh /s; chmod +x /s; /s"]
+#          command: ["bash", "-c", "sleep 3600"]
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+              readOnly: true
+            - name: identity
+              mountPath: /identity
+              readOnly: true
+
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        - name: scripts
+          configMap:
+            name: {{ template "ssh.fullname" . }}-scripts
+
+        - name: identity
+          secret:
+            secretName: {{ .Values.ssh.identity.secret }}
+            items:
+              - key: {{ .Values.ssh.identity.key }}
+                path: id
+
