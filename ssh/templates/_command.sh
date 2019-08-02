@@ -4,9 +4,13 @@
 {{- $user := .Values.ssh.user -}}
 {{- $ls := .Values.ssh.forwards.local -}}
 {{- $rs := .Values.ssh.forwards.remote -}}
-{{- $ps := .Values.ssh.forwards.extra_params -}}
+{{- $ps := .Values.ssh.extra_params -}}
 {{- $tunnel_only := .Values.ssh.tunnel_only -}}
-{{- $timeout := .Values.ssh.timeout -}}
+{{- $timeout := .Values.ssh.timeout }}
+
+mkdir -p /root/.ssh/
+cp /identity/id /id
+chmod 600 /id
 
 function output_keep_alive()
 {
@@ -26,41 +30,81 @@ function output_keep_alive()
      done
 }
 
-function tunnel()
+function listens_in_forwards()
 {
-    output_keep_alive | \
-        ssh -i /id "{{ $user }}@{{ $host }}" -p {{ $port }} \
-        {{- range $ls }}
-            -L "{{ . }}" \
-        {{- end }}
-        {{- range $rs }}
-            -R "{{ . }}" \
-        {{- end }}
-            -o \
-        {{- range $key, $val := $ps }}
-            "{{ $key }}={{$val}}" \
-        {{- end }}
-    echo dead > /alive
+    for f in `cat`; do
+        echo $f | cut -d ':' -f1,2
+    done
 }
 
-function remote_command()
+function current_listens()
 {
-    cat /scripts/remote_command | \
-        ssh -i /id "{{ $user }}@{{ $host }}" -p {{ $port }} \
-            -o \
-        {{- range $key, $val := $ps }}
-            "{{ $key }}={{$val}}" \
-        {{- end }}
+    netstat -anpt | tr -s ' '|cut -d ' ' -f4,7
+}
 
-    echo dead > /alive
+function kill_remote_sshd()
+{
+    # kill sshd to make sure remote environment is clear
+    echo "kill -9 \`ps -elf|grep -v grep|grep 'sshd: root'|tr -s ' '|cut -d ' ' -f4\`" | \
+        ssh -i /id "{{ $user }}@{{ $host }}" -p {{ $port }} \
+            {{- range $key, $val := $ps }}
+            -o "{{ $key }}={{ $val }}" \
+            {{- end }}
+            -tt
+}
+
+function run_tunnel()
+{
+
+    # start tunnel
+    output_keep_alive | \
+        ssh -i /id "{{ $user }}@{{ $host }}" -p {{ $port }} \
+            -o ExitOnForwardFailure=yes \
+            {{- range $ls }}
+            -L "{{ . }}" \
+            {{- end }}
+            {{- range $rs }}
+            -R "{{ . }}" \
+            {{- end }}
+            {{- range $key, $val := $ps }}
+            -o "{{ $key }}={{ $val }}" \
+            {{- end }}
+            -tt >/dev/nul
+
+    echo tunnel > /alive
+}
+
+function run_remote_command()
+{
+    cat /scripts/remote_command.sh | \
+        ssh -i /id "{{ $user }}@{{ $host }}" -p {{ $port }} \
+            {{- range $key, $val := $ps }}
+            -o "{{ $key }}={{ $val }}" \
+            {{- end }}
+            -tt 'bash -'
+
+    echo remote_command > /alive
 }
 
 echo alive > /alive
-tunnel &
-remote_command &
+
+# tunnel:
+{{- if or $ls $rs }}
+
+kill_remote_sshd
+sleep 5
+
+run_tunnel &
+{{- end }}
+
+# remote command:
+{{- if .Values.ssh.remote_command }}
+run_remote_command &
+{{- end }}
 
 while true; do
     if [[ 'alive' != `cat /alive` ]]; then
+        echo -e "\nExited: `cat /alive`\n"
         exit
     fi
 done

@@ -4,6 +4,7 @@ metadata:
   name: {{ include "ssh.fullname" . }}
   labels:
 {{ include "ssh.labels" . | indent 4 }}
+    app: ssh
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -26,8 +27,22 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          command: ["bash", "/scripts/command.sh"]
-      {{- with .Values.nodeSelector }}
+          env:
+            # use this env to ensure pod restart after reinstall.
+            - name: config
+              value: {{ toJson .Values.ssh | quote }}
+#          command: ["bash", "/scripts/command.sh"]
+          command: ["bash", "-c", "cp /scripts/command.sh /s; chmod +x /s; /s"]
+#          command: ["bash", "-c", "sleep 3600"]
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+              readOnly: true
+            - name: identity
+              mountPath: /identity
+              readOnly: true
+
+    {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -39,14 +54,15 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    volumes:
-      - name: scripts
-        configMap:
-          name: {{ template "ssh.fullname" . }}-scripts
-      - name: identity
-        secret:
-          secretName: {{ .Values.ssh.identity.secret }}
-          items:
-            - key: {{ .Values.ssh.identity.key }}
-              path: {{ template "ssh.identity_path" . }}
+      volumes:
+        - name: scripts
+          configMap:
+            name: {{ template "ssh.fullname" . }}-scripts
+
+        - name: identity
+          secret:
+            secretName: {{ .Values.ssh.identity.secret }}
+            items:
+              - key: {{ .Values.ssh.identity.key }}
+                path: id
 
