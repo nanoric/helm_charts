@@ -111,5 +111,6 @@ while true; do
         echo -e "\nExited: `cat /alive`\n"
         exit
     fi
+    sleep 1
 done
 

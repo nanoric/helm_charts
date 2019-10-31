@@ -17,7 +17,7 @@ ssh:
   forwards:
     local: []
     remote: []  # eg. "0.0.0.0:22:gitlab:22"
-  remote_command: "while true; do sleep 60; date; done"
+  remote_command: ""
   timeout: 0  # for tunnel, set this to 600 is recommended
   extra_params:
     ServerAliveInterval: 60
