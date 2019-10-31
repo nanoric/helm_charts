@@ -24,6 +24,9 @@ global:
   certificates:
     image:
       repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_alpine-certificates
+  kubectl:
+    image:
+      repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_kubectl
 
 gitlab:
   gitlab:
@@ -91,13 +94,9 @@ gitlab:
       repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_alpine-certificates
 
   certmanager-issuer:
-    image:
-      repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_kubectl
     email: 475647575@qq.com
 
   certmanager:
-    image:
-      repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/quay.io_jetstack_cert-manager-controller
     rbac:
       create: true
 
@@ -113,8 +112,6 @@ gitlab:
         repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/k8s.gcr.io_defaultbackend
 
   shared-secrets:
-    image:
-      repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_kubectl
     selfsign:
       image:
-        repository: registry.gitlab.com/gitlab-org/build/cng/cfssl-self-sign
+        repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_cfssl-self-sign
