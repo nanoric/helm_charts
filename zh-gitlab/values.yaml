@@ -12,27 +12,27 @@ global:
   edition: ee
   enterpriseImages:
     migrations:
-      repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitlab-rails-ee
+      #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitlab-rails-ee
     sidekiq:
-      repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitlab-sidekiq-ee
+      #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitlab-sidekiq-ee
     task-runner:
-      repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitlab-task-runner-ee
+      #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitlab-task-runner-ee
     unicorn:
-      repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitlab-unicorn-ee
+      #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitlab-unicorn-ee
       workhorse:
-        repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitlab-workhorse-ee
+        #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitlab-workhorse-ee
   certificates:
     image:
-      repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_alpine-certificates
+      #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_alpine-certificates
   kubectl:
     image:
-      repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_kubectl
+      #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_kubectl
 
 gitlab:
   gitlab:
     gitaly:
       image:
-        repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitaly
+        #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitaly
       persistence:
         enabled: false
         size: 20Gi
@@ -40,7 +40,7 @@ gitlab:
 
     gitlab-shell:
       image:
-        repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitlab-shell
+        #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitlab-shell
 
     unicorn:
       ingress:
@@ -51,7 +51,7 @@ gitlab:
 
     gitlab-monitor:
       image:
-        repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitlab-monitor
+        #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitlab-monitor
 
   postgresql:
     install: true
@@ -61,9 +61,9 @@ gitlab:
       size: 8Gi
 
   minio:
-    image: registry.cn-shanghai.aliyuncs.com/zh-mirror/minio_minio
+#    image: registry.cn-shanghai.aliyuncs.com/zh-mirror/minio_minio
     minioMc:
-      image: registry.cn-shanghai.aliyuncs.com/zh-mirror/minio_mc
+#      image: registry.cn-shanghai.aliyuncs.com/zh-mirror/minio_mc
     persistence:
       enabled: false
       storageClass:
@@ -71,10 +71,10 @@ gitlab:
   prometheus:
     configmapReload:
       image:
-        repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/jimmidyson_configmap-reload
+        #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/jimmidyson_configmap-reload
     initChownData:
       image:
-        repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/busybox
+        #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/busybox
     server:
       persistentVolume:
         enabled: false
@@ -85,13 +85,13 @@ gitlab:
 
   redis:
     metrics:
-      image: registry.cn-shanghai.aliyuncs.com/zh-mirror/oliver006_redis_exporter
+#      image: registry.cn-shanghai.aliyuncs.com/zh-mirror/oliver006_redis_exporter
     persistence:
       enabled: false
 
   certificates:
     image:
-      repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_alpine-certificates
+      #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_alpine-certificates
 
   certmanager-issuer:
     email: 475647575@qq.com
@@ -106,7 +106,7 @@ gitlab:
 
   nginx-ingress:
     image:
-      repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/quay.io_kubernetes-ingress-controller_nginx-ingress-controller
+      #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/quay.io_kubernetes-ingress-controller_nginx-ingress-controller
     defaultBackend:
       image:
         repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/k8s.gcr.io_defaultbackend
@@ -114,4 +114,4 @@ gitlab:
   shared-secrets:
     selfsign:
       image:
-        repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_cfssl-self-sign
+        #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_cfssl-self-sign
