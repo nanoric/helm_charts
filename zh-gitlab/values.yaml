@@ -27,6 +27,10 @@ global:
   kubectl:
     image:
       #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_kubectl
+  busybox:
+    image:
+      repository: busybox
+      tag: "1.31"
 
 gitlab:
   gitlab:
@@ -48,6 +52,17 @@ gitlab:
         tls:
           enabled: true
           secretName: git.happyzh.com
+      init:
+#        image:
+#          repository: busybox
+#          tag: latest
+        resources:
+          requests:
+            cpu: 1
+      resources:
+        requests:
+          cpu: 300m
+          memory: 1.2G
 
     gitlab-monitor:
       image:
@@ -86,8 +101,9 @@ gitlab:
   redis:
     metrics:
 #      image: registry.cn-shanghai.aliyuncs.com/zh-mirror/oliver006_redis_exporter
-    persistence:
-      enabled: false
+    master:
+      persistence:
+        enabled: false
 
   certificates:
     image:
@@ -109,7 +125,7 @@ gitlab:
       #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/quay.io_kubernetes-ingress-controller_nginx-ingress-controller
     defaultBackend:
       image:
-        repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/k8s.gcr.io_defaultbackend
+        #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/k8s.gcr.io_defaultbackend
 
   shared-secrets:
     selfsign:
