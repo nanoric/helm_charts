@@ -17,10 +17,6 @@ global:
       #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitlab-sidekiq-ee
     task-runner:
       #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitlab-task-runner-ee
-    unicorn:
-      #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitlab-unicorn-ee
-      workhorse:
-        #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitlab-workhorse-ee
   certificates:
     image:
       #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_alpine-certificates
@@ -45,24 +41,6 @@ gitlab:
     gitlab-shell:
       image:
         #repository: registry.cn-shanghai.aliyuncs.com/zh-mirror/registry.gitlab.com_gitlab-org_build_cng_gitlab-shell
-
-    unicorn:
-      ingress:
-        enabled: true
-        tls:
-          enabled: true
-          secretName: git.happyzh.com
-      init:
-#        image:
-#          repository: busybox
-#          tag: latest
-        resources:
-          requests:
-            cpu: 1
-      resources:
-        requests:
-          cpu: 300m
-          memory: 1.2G
 
     gitlab-monitor:
       image:

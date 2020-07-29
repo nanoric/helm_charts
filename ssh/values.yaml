@@ -22,7 +22,8 @@ ssh:
   extra_params:
     ServerAliveInterval: 60
     StrictHostKeyChecking: yes  # normally no
-
+#readinessProbe: {}
+#livenessProbe: {}
 
 imagePullSecrets: []
 nameOverride: ""

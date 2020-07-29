@@ -6,6 +6,7 @@ image:
   repository: registry.cn-shanghai.aliyuncs.com/happyzh/busybox
   tag: latest
   pullPolicy: IfNotPresent
+args: []
 
 imagePullSecrets: []
 nameOverride: ""

@@ -43,3 +43,13 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
+
+{{- define "busybox.args" -}}
+{{- if .Values.args -}}
+{{- .Values.args -}}
+{{- else -}}
+- "sh"
+- "-c"
+- "sleep 3600"
+{{- end -}}
+{{- end -}}

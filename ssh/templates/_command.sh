@@ -87,25 +87,29 @@ function run_remote_command()
     echo remote_command > /alive
 }
 
-echo "remote command:"
-cat /scripts/remote_command.sh
-
-echo "script to kill sshd:"
-cat /scripts/remote_kill_sshd.sh
+#echo "remote command:"
+#cat /scripts/remote_command.sh
+#
+#echo "script to kill sshd:"
+#cat /scripts/remote_kill_sshd.sh
 
 echo alive > /alive
 # tunnel:
 {{- if or $ls $rs }}
+echo killing remote sshd
 kill_remote_sshd
 
+echo running tunnel
 run_tunnel &
 {{- end }}
 
 # remote command:
 {{- if .Values.ssh.remote_command }}
+echo running remote command
 run_remote_command &
 {{- end }}
 
+echo monitoring running state.
 while true; do
     if [[ 'alive' != `cat /alive` ]]; then
         echo -e "\nExited: `cat /alive`\n"
